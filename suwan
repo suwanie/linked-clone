@@ -1,0 +1,17 @@
+https://www.youtube.com/watch?v=JGhuAJKGRN0
+
+
+props를 대문자로 보냈는데(home에서 HeaderLink로 Icon을 ..), 받는 자식 컴포넌트에서 괄호롤 이걸 사용할 경우 Unhandled Runtime Error
+Error: Objects are not valid as a React child (found: object with keys {$$typeof, type, compare}). If you meant to render a collection of children, use an array instead. 이런 에러가 발생한다. 여기선 괄호가 아닌 <>이렇게 컴포넌트 형식으로 사용해 줘야 한다.
+
+->css의 dark는 ->react theme의 다크모드일때 된다.
+
+1-24 1:11:24
+
+
+1-25 2:01:15
+mongodb+srv://suwan:<password>@cluster0.qblzk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority ->이건 mongodb에서 cluster connect를 누르면 나온다, password는 database access에서 볼 수 있고, myFirstDatabase는 그냥 database 이름이다. 여기선 linked이다.
+
+->nextAuth, mongodb 초기 셋팅을 끝내면 그 다음 middleWare를 해준다. (당연히 잘은 모르지만 여기선 로그인 정보가 없을때 /home으로 튕겨내는 역할을 한다. 생각해보니 항상 nextAuth하고 session하면 로그인이 안됐을때 그 세션 데이터를 이용하여 login page로 튕겨냈었던거 같다.)
+
+sticky는 고정시키는거 알지? (뭐.. 사이드광고같은데 사용할 수 있겠다.)
