@@ -10,16 +10,30 @@ Error: Objects are not valid as a React child (found: object with keys {$$typeof
 
 
 1-25 2:01:15
+
+
+
+
 mongodb+srv://suwan:<password>@cluster0.qblzk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority ->이건 mongodb에서 cluster connect를 누르면 나온다, password는 database access에서 볼 수 있고, myFirstDatabase는 그냥 database 이름이다. 여기선 linked이다.
 
 ->nextAuth, mongodb 초기 셋팅을 끝내면 그 다음 middleWare를 해준다. (당연히 잘은 모르지만 여기선 로그인 정보가 없을때 /home으로 튕겨내는 역할을 한다. 생각해보니 항상 nextAuth하고 session하면 로그인이 안됐을때 그 세션 데이터를 이용하여 login page로 튕겨냈었던거 같다.)
 
 sticky는 고정시키는거 알지? (뭐.. 사이드광고같은데 사용할 수 있겠다.)
 
-
-
 1-26 3:03:47
+
+
+
 
 http://localhost:3000/home?callbackUrl=http://localhost:3000/&error=OAuthAccountNotLinked
 이런게 뜨면서 로그인이 안되는 예상치 못한 에러가 발생했다.
 ->아, 이건 mongodb에서 accounts를 들어가보니,(그 브라우저 누르면 계정 볼 수 있자나?) account에 google이 두개로 되어있어서 그런거 같다. 그래서 삭제하고 다시 로그인을 했더니 되었다. 하지만 여전한 문제는 자동로그인이 된다는거.. 계정 바꾸고싶인데 ㅠ
+
+session을 log로 찍어보면 expires: "2022-02-25T21:04:48.909Z"이 뜨는데, 그건 설명해주는데 잘 이해 못함 ..,ㅎ 3:58:00분쯤
+
+session status를 하는데, 이건 nextAuth 홈페이지에서 함 봐보기
+1-27 4:04:56 =>15:03
+
+
+->recoilState는 나중에 완성되면, post를 클릭했을 때 modal로 열리는 post는 모두 recoilState를 참조하고 있다.
+->modal.jsx에서는 하나는 모달을 위한 것, 하나는 나의 post를 위한 것이다.
