@@ -1,11 +1,39 @@
 import { useState } from "react";
-
+import { useSession } from "next-auth/react";
+import { useRecoilState } from "recoil";
+import { modalState } from "../atoms/modalAtom";
 function Form() {
   const [input, setInput] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const { data: session } = useSession();
 
+  const [modalOpen, setModalOpen] = useRecoilState(modalState);
+
+  // 이걸 하려면 api route를 만들어야 한다. =>이게 [id].js 인가?
   const uploadPost = async (e) => {
     e.preventDefault();
+    //fetch와 axios 차이점 알아보기
+    //body에는 모든 post 내용이 담겨있다. ->이게 posts/index의 insertOne에 들어간다.
+    //send request to my backend db
+    const response = await fetch("/api/posts", {
+      method: "POST",
+      body: JSON.stringify({
+        input: input,
+        photoUrl: photoUrl,
+        username: session.user.name,
+        email: session.user.email,
+        userImg: session.user.image,
+        createAt: new Date().toString(),
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const responseData = await response.json();
+    console.log("responseData =>", responseData);
+
+    //setHandlePost(true)
+    setModalOpen(false);
   };
 
   return (

@@ -8,7 +8,9 @@ import Feed from "../components/Feed";
 import Header from "../components/Header";
 import Modal from "../components/Modal";
 import Sidebar from "../components/Sidebar";
-export default function Home() {
+import { connectToDatabase } from "../util/mongodb";
+
+export default function Home({ posts }) {
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
 
   const [modalType, setModalType] = useRecoilState(modalTypeState);
@@ -38,7 +40,7 @@ export default function Home() {
       <main className="flex justify-center gap-x-5 px-4 sm:px-12">
         <div className="flex flex-col md:flex-row gap-5">
           <Sidebar />
-          <Feed />
+          <Feed posts={posts} />
         </div>
         {/* widget */}
 
@@ -65,9 +67,31 @@ export async function getServerSideProps(context) {
     };
   }
 
+  // Get posts on SSR
+  const { db } = await connectToDatabase();
+  const posts = await db
+    .collection("posts")
+    .find()
+    .sort({ timestamp: -1 })
+    .toArray();
+
+  // Get google news api, 오른쪽에 뜨는 news들
+
   return {
     props: {
       session,
+
+      // ssr로 준비해놓고 한방에 다 같이 띄우기 위함
+      posts: posts.map((post) => ({
+        // _이건 monogodb에 _id로 저장하기 때문
+        _id: post._id.toString(),
+        input: post.input,
+        photoUrl: post.photoUrl,
+        username: post.username,
+        email: post.email,
+        userImg: post.userImg,
+        createAt: post.createAt,
+      })),
     },
   };
 }

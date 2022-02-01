@@ -37,3 +37,9 @@ session status를 하는데, 이건 nextAuth 홈페이지에서 함 봐보기
 
 ->recoilState는 나중에 완성되면, post를 클릭했을 때 modal로 열리는 post는 모두 recoilState를 참조하고 있다.
 ->modal.jsx에서는 하나는 모달을 위한 것, 하나는 나의 post를 위한 것이다.
+
+
+
+2-2
+util 폴더는 db와 연결해주는 것이 들어간다.
+->Error: Error serializing 이 error는 object가 아니기 때문에 object로 바꿔줘야 한다.(5:52:57) SSR에서 생긴 문제
