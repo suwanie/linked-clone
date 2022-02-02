@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRecoilState } from "recoil";
 import { modalState } from "../atoms/modalAtom";
+import { handlePostState } from "../atoms/postAtom";
 function Form() {
   const [input, setInput] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const { data: session } = useSession();
-
+  const [handlePost, setHandlePost] = useRecoilState(handlePostState);
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
 
   // 이걸 하려면 api route를 만들어야 한다. =>이게 [id].js 인가?
@@ -32,7 +33,7 @@ function Form() {
     const responseData = await response.json();
     console.log("responseData =>", responseData);
 
-    //setHandlePost(true)
+    setHandlePost(true); //이게 feed의 useEffect에 영향을 준다고?, 아 그래서 useEffect 안에선 이게 false로 되어있구나, 내가 왜 이거 다 false지? 했던 의문이 풀림 (6시5분쯤..)
     setModalOpen(false);
   };
 

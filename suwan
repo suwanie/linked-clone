@@ -40,6 +40,9 @@ session status를 하는데, 이건 nextAuth 홈페이지에서 함 봐보기
 
 
 
-2-2
+2-2 5:58:58초
 util 폴더는 db와 연결해주는 것이 들어간다.
 ->Error: Error serializing 이 error는 object가 아니기 때문에 object로 바꿔줘야 한다.(5:52:57) SSR에서 생긴 문제
+->아니, feed에서 1차로 불러오고, 이걸 index에서 ssr로 준비 시킨다음에 다시 feed로 props로 보내서 그걸 가지고 띄운다고?.. 더 느린거아냐? (영어 못해서 사실 이해못함)
+
+2-3 6:37:59초

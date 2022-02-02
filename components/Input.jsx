@@ -18,7 +18,7 @@ function Input() {
       <div className="flex items-center space-x-2">
         <Avatar
           src={session?.user?.image}
-          className=" !h-10 !w-10 cursor-pointer"
+          className="!h-10 !w-10 cursor-pointer"
         />
 
         <motion.button
@@ -34,7 +34,7 @@ function Input() {
         </motion.button>
       </div>
       {/* flex wrap의 경우 모바일환경에서 디스플레이가 작아지면 묶어주는 뭐 그런건가 보다. */}
-      <div className="flex items-center flex-wrap gap-y-4 justify-center md:gap-x-10">
+      <div className="flex items-center flex-wrap gap-4 justify-center md:gap-x-10">
         <button className="inputButton group">
           <PhotoSizeSelectActualIcon className="text-blue-400" />
           <h4 className="opacity-80 group-hover:opacity-100">Photo</h4>

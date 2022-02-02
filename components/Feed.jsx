@@ -2,6 +2,7 @@ import Input from "./Input";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { handlePostState, useSSRPostsState } from "../atoms/postAtom";
+import Post from "./Post";
 function Feed({ posts }) {
   // posts는 ssr로 준비한 data를 가져온 것이다.
   const [realtimePosts, setRealtimePosts] = useState([]);
@@ -32,13 +33,11 @@ function Feed({ posts }) {
       <Input />
       {/* posts */}
       {/* 데이터를 가져왔으면 화면에 보여줘야지, imgUrl를 불러올때 img태그를 쓰면 뭐지? 그 내용하고 함께 렌더가 되지 않고 살짝 늦게된다, 이건 SSR이 아니라고? 그래서 index.js에서 get post on ssr를 해준다. */}
-      {realtimePosts.map((post) => (
-        <>
-          <img src={post.photoUrl} alt="" />
-          <div>{post.input}</div>
-        </>
-      ))}
+      {!useSSRPosts
+        ? realtimePosts.map((post) => <Post key={post._id} post={post} />)
+        : posts.map((post) => <Post key={post._id} post={post} />)}
     </div>
+    // 이렇게 만약, ssr에서 준비된 상태면 새로고침을 눌렀을 때, 깜빡거리는게 없다. 즉 겁나 빠르다. 즉 만약 ssr이 아니면 realtimePosts로 db에서 데이터를 불러오고(useEffect 실행), 이미 준비가 되었다면 posts로 가져온다(useEffect 노실행), 또한 이렇게 함으로써 새로고침을 하지 않아도 post를 하면 realtime으로 글이 뜨게된다.
   );
 }
 
