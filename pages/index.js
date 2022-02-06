@@ -8,9 +8,10 @@ import Feed from "../components/Feed";
 import Header from "../components/Header";
 import Modal from "../components/Modal";
 import Sidebar from "../components/Sidebar";
+import Widgets from "../components/Widgets";
 import { connectToDatabase } from "../util/mongodb";
 
-export default function Home({ posts }) {
+export default function Home({ posts, articles }) {
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
 
   const [modalType, setModalType] = useRecoilState(modalTypeState);
@@ -42,7 +43,8 @@ export default function Home({ posts }) {
           <Sidebar />
           <Feed posts={posts} />
         </div>
-        {/* widget */}
+
+        <Widgets articles={articles} />
 
         <AnimatePresence>
           {modalOpen && (
@@ -75,12 +77,17 @@ export async function getServerSideProps(context) {
     .sort({ timestamp: -1 })
     .toArray();
 
-  // Get google news api, 오른쪽에 뜨는 news들
+  // Get google news api, 오른쪽에 뜨는 news들, conuntry=나라 코드명,
+  /* Error: Error serializing `.articles` returned from `getServerSideProps` in "/".
+Reason: `undefined` cannot be serialized as JSON. Please use `null` or omit this value.  요런 요상한 에러가 떠버린다. 걍 서버 닫았다 키니까 다시 되긴 되는데, 콘솔 로그에 안찍힌다..*/
+  const results = await fetch(
+    `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${process.env.NEWS_API_KEY}`
+  ).then((res) => res.json());
 
   return {
     props: {
       session,
-
+      articles: results.articles,
       // ssr로 준비해놓고 한방에 다 같이 띄우기 위함
       posts: posts.map((post) => ({
         // _이건 monogodb에 _id로 저장하기 때문

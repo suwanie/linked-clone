@@ -3,20 +3,45 @@ import { useRecoilState } from "recoil";
 import { modalState, modalTypeState } from "../atoms/modalAtom";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
+import ThumbUpOffAltOutlinedIcon from "@mui/icons-material/ThumbUpOffAltOutlined";
+import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import { useState } from "react";
-import { getPostState } from "../atoms/postAtom";
+import { getPostState, handlePostState } from "../atoms/postAtom";
+import ThumbUpOffAltRoundedIcon from "@mui/icons-material/ThumbUpOffAltRounded";
+import { useSession } from "next-auth/react";
+import TimeAgo from "timeago-react";
+import { DeleteRounded, ReplayRounded } from "@mui/icons-material";
 
 // modalPost는 글을 클릭했을 때 뜨는 화면이다, Modal.jsx에서 보내준다.
 function Post({ post, modalPost }) {
+  const { data: session } = useSession();
+
+  const [handlePost, setHandlePost] = useRecoilState(handlePostState);
+
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
   const [showInput, setShowInput] = useState(false);
 
   const [modalType, setModalType] = useRecoilState(modalTypeState);
   const [postState, setPostState] = useRecoilState(getPostState);
 
+  const [liked, setLiked] = useState(false);
+
   // string은 input에서 받고, n은 number로, 몇글자까지 보여줄 것인지 설정하는 것이다. 이건 아래에서 수정 가능
   const truncate = (string, n) =>
     string?.length > n ? string.substr(0, n - 1) + "...see more" : string;
+
+  // 이렇게만하면 Post.jsx?feb4:34 DELETE http://localhost:3000/api/posts/61fac345569a4ea69283da2b 500 (Internal Server Error) 요 에러가 뜨는데, there is no api router이기 때문에(any response back) [id].js에서 끄적여 준다.
+  const deletePost = async () => {
+    const response = await fetch(`/api/posts/${post._id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    // realtime이기때문에 이걸 해준다고?
+    setHandlePost(true);
+    // 삭제된 게시물이면 modal이 꺼져야 하니까 .. ㅇㅋ
+    setModalOpen(false);
+  };
 
   return (
     <div
@@ -31,7 +56,11 @@ function Post({ post, modalPost }) {
             {post.username}
           </h6>
           <p className="text-sm dark:text-white/75 opacity-80">{post.email}</p>
-          {/* Timeago stamp */}
+
+          <TimeAgo
+            datetime={post.createAt}
+            className="text-xs dark:text-white/75 opacity-80s"
+          />
         </div>
         {/* 오, 이거 하니까 옆에 ...누르면 임펙트생김 ㅋ 개이득 */}
         {modalPost ? (
@@ -62,15 +91,52 @@ function Post({ post, modalPost }) {
         <img
           src={post.photoUrl}
           alt=""
-          className="w-full cursor-pointer"
+          className="w-full cursor-pointer "
           onClick={() => {
             setModalOpen(true);
+            // gifYouUp은 클릭했을 때 나타나는 animation효과로 recoil의 빛을 여기서 본다, 아니 어떻게 Modal를 참조할 수 있지? Variants — variants props를 활용하면 선언적 방법으로 돔 전체에 전파되는 애니메이션을 만들 수도 있다. ??
             setModalType("gifYouUp");
             // post(input과 등등 정보)를 여기에 넣어주면서 사진을 클릭했을 때도 이것들이 함께 보이게 한다.(post는 props로 받아옴)
             setPostState(post);
           }}
         />
       )}
+      <div className="flex justify-evenly items-center  dark:border-t border-gray-600/80 mx-2.5 pt-2 text-black/70 dark:text-white/75">
+        {modalPost ? (
+          <button className="postButton">
+            <CommentOutlinedIcon />
+            <h4>Comment</h4>
+          </button>
+        ) : (
+          <button
+            className={`postButton ${liked && "text-blue-500"}`}
+            // 아하, true를 주면 true값만 줄 수 있기 때문에, 만약 !liked로 하면 현재 false가 기본값이기 때문에 이것의 반대값을 클릭으로 계속 바꿔 줄 수 있어, 두번 작업할 필요가 없다..!! 오호!!!
+            onClick={() => setLiked(!liked)}
+          >
+            {liked ? (
+              <ThumbUpOffAltRoundedIcon className="-scale-x-100 " />
+            ) : (
+              <ThumbUpOffAltOutlinedIcon className="-scale-x-100" />
+            )}
+          </button>
+        )}
+
+        {/* delete는 내가 쓴 글에만 보여야 한다, 다른 사람글은 share가 보이도록, 6:55:00쯤에 uid가 아닌 email로 한 이유를 설명해줌 */}
+        {session?.user.email === post.email ? (
+          <button
+            className="postButton focus:text-red-400"
+            onClick={deletePost}
+          >
+            <DeleteRounded />
+            <h4>Delete post</h4>
+          </button>
+        ) : (
+          <button className="postButton">
+            <ReplayRounded className="-scale-x-100" />
+            <h4>Share</h4>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

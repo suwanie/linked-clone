@@ -45,4 +45,17 @@ util 폴더는 db와 연결해주는 것이 들어간다.
 ->Error: Error serializing 이 error는 object가 아니기 때문에 object로 바꿔줘야 한다.(5:52:57) SSR에서 생긴 문제
 ->아니, feed에서 1차로 불러오고, 이걸 index에서 ssr로 준비 시킨다음에 다시 feed로 props로 보내서 그걸 가지고 띄운다고?.. 더 느린거아냐? (영어 못해서 사실 이해못함)
 
-2-3 6:37:59초
+2-3 6:37:59초 =>58분
+
+
+
+2-7 개망했네 ..슙발
+
+[next-auth][warn][NEXTAUTH_URL]이 에러를 .env.local에 NEXTAUTH를 추가해주면 없어진다고 한다.
+하지만 배포할 때는 localhost에서 도메인 네임으로 교체해야한다?
+
+date fetch관련은 비동기로 알지??.. async찾아봐 암튼,
+
+widgets을 하기 위해 newsapi.org에서 key를 얻었다.
+
+뉴스 저거 ssr?에 추가하고 log로 찍어봤더니 localhost/:8 GET https://thumb.pann.com/tc_480/https://fimg5.pann.com/new/download.jsp?FileID=63001075 net::ERR_EMPTY_RESPONSE에러가 뜬다 터미널창에는 가져오는데 크롬에서는 못가져옴

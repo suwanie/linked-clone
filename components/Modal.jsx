@@ -6,8 +6,8 @@ import { useSession } from "next-auth/react";
 import { Avatar } from "@mui/material";
 import Form from "./Form";
 import { useRecoilValue } from "recoil";
-// import { getPostState } from "../atoms/postAtom";
-// import Post from "./Post";
+import { getPostState } from "../atoms/postAtom";
+import Post from "./Post";
 
 // 여긴 애니메이션 효과
 const dropIn = {
@@ -57,7 +57,8 @@ const gifYouUp = {
 // handleClose는 index.js에서 props로 받는다.
 const Modal = ({ handleClose, type }) => {
   const { data: session } = useSession();
-
+  // form에서 보낸 post를 recoil에 담고 그 value를 이걸로 갖고 온다고?, post.jsx에서 데이터를 넘겨 받아 recoil에서 가져오는군
+  const post = useRecoilValue(getPostState);
   return (
     <Backdrop onClick={handleClose}>
       {type === "dropIn" && (
@@ -97,15 +98,18 @@ const Modal = ({ handleClose, type }) => {
           animate="visible"
           exit="exit"
         >
-          {/*   <motion.img
+          {/* 이거 풀면서 이미지를 클릭하면 modal로 뜨게 됐다 */}
+          <motion.img
             alt=""
             onDoubleClick={handleClose}
+            // 여기서 post는 recoilValue로 가져온다.
             src={post.photoUrl}
             className="object-contain max-h-[80vh] w-full max-w-3xl rounded-l-lg"
           />
           <div className="w-full md:w-3/5 bg-white dark:bg-[#1D2226] rounded-r-lg">
+            {/* 클릭 시 보여주는 component */}
             <Post post={post} modalPost />
-          </div> */}
+          </div>
         </motion.div>
       )}
     </Backdrop>
